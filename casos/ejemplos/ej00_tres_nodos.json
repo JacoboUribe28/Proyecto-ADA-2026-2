@@ -1,0 +1,13 @@
+{
+  "descripcion": "Caso de práctica (formato de la profesora). El voraz elige N1 y N2 (5 categorías); el óptimo es N2 y N3 (6 categorías).",
+  "parametros": {
+    "numero_nodos": 3,
+    "cupo_participantes_por_ronda_k": 2,
+    "presupuesto_ruido_por_ronda_B": 6
+  },
+  "nodos": [
+    {"id": "N1", "coeficiente_utilidad": 4.0, "categorias": ["K1", "K2", "K3", "K4"]},
+    {"id": "N2", "coeficiente_utilidad": 6.0, "categorias": ["K1", "K2", "K5"]},
+    {"id": "N3", "coeficiente_utilidad": 5.0, "categorias": ["K3", "K4", "K6"]}
+  ]
+}

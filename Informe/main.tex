@@ -1,0 +1,24 @@
+% Informe — Proyecto ADA 2026-2 (Red). Autor: Jacobo Uribe Montoya, código 36921.
+% Compilar desde la carpeta Informe/:  pdflatex main.tex  (dos veces, para el índice)
+\documentclass[11pt]{article}
+\usepackage{formato}
+
+\begin{document}
+\portada
+
+\tableofcontents
+\newpage
+
+\input{secciones/01_introduccion}
+\input{secciones/02_formalizacion}
+\input{secciones/03_np_dureza}
+\input{secciones/04_reparto}
+\input{secciones/05_seleccion}
+\input{secciones/06_solucion_base}
+\input{secciones/07_resultados}
+\input{secciones/08_experimentos}
+\input{secciones/09_referencias}
+
+\appendix
+\input{secciones/A_codigo}
+\end{document}

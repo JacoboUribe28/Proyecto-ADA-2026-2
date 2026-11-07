@@ -1,0 +1,101 @@
+\section{Formalización}\label{sec:formalizacion}
+
+\subsection{Parte 1: reparto óptimo del presupuesto (\REP)}
+
+\begin{definicion}[Reparto óptimo del presupuesto]
+\textbf{Entrada:} $N$ nodos ya seleccionados; para cada nodo $i$, una utilidad $u_i:\N\to\R$
+creciente y cóncava; un presupuesto $B\in\N$ en unidades enteras; opcionalmente, un tope $c_i$ por
+nodo (su presupuesto de ruido tolerable).
+
+\textbf{Salida:} un reparto $x=(x_1,\dots,x_N)\in\N^N$.
+
+\textbf{Objetivo:}
+\[
+  \max_{x}\ \sum_{i=1}^{N} u_i(x_i)
+  \quad\text{sujeto a}\quad \sum_{i=1}^{N} x_i \le B,\qquad x_i\in\N,\qquad x_i\le c_i .
+\]
+\end{definicion}
+
+\paragraph{Ganancia marginal.} La unidad número $x+1$ del nodo $i$ aporta
+$g_i(x)=u_i(x+1)-u_i(x)$. \emph{Creciente} significa $g_i(x)\ge 0$; \emph{cóncava}, en el caso
+discreto, significa que las ganancias no aumentan: $g_i(0)\ge g_i(1)\ge g_i(2)\ge\cdots$.
+
+\paragraph{Tamaño de la entrada.} El par $(N,B)$: $N$ es el número de funciones $u_i$ y de
+candidatos en cada decisión; $B$ es el número de decisiones (una por unidad). Se supone que evaluar
+$u_i$ cuesta tiempo constante. $B$ cuenta por su \emph{valor}, no por su número de bits; por eso
+la cota de la Sección~\ref{sec:reparto} es pseudo-polinomial. En la solución completa, \REP{} se
+aplica solo a los $k$ nodos elegidos en la Parte~2, así que allí su tamaño es $(k,B)$.
+
+\paragraph{Forma de $u_i$ (supuesto de modelado).} El caso de la profesora da, por nodo, solo el
+coeficiente $w_i>0$. Se adopta $u_i(x)=w_i\ln(1+x)$: vale $0$ en $x=0$, es creciente y es cóncava,
+con rendimientos decrecientes, que es lo que expresa el compromiso entre ruido y utilidad. El
+programa admite también $w_i\sqrt{x}$ y $w_i(1-e^{-bx})$ (opción \texttt{--utilidad}) sin cambiar
+el algoritmo, porque la prueba de optimalidad solo usa la concavidad.
+
+\subsection{Parte 2: selección de participantes (\SEL)}
+
+\begin{definicion}[Selección de participantes]
+\textbf{Entrada:} nodos $V=\{1,\dots,N\}$; una utilidad conjunta $f:2^V\to\R_{\ge0}$ evaluable en
+tiempo polinomial; un cupo $k\in\N$ con $1\le k\le N$ (con $k=N$ participan todos).
+
+\textbf{Salida:} un grupo $A\subseteq V$ con $|A|=k$.
+
+\textbf{Objetivo:} $\max_{A\subseteq V,\ |A|=k} f(A)$.
+\end{definicion}
+
+Para $A\subseteq V$ y $j\notin A$, la ganancia marginal es $\Delta_j(A)=f(A\cup\{j\})-f(A)$. Se exige
+que $f$ sea \textbf{normalizada} ($f(\emptyset)=0$), \textbf{monótona} ($\Delta_j(A)\ge0$) y
+\textbf{submodular}: para todo $A\subseteq A'\subseteq V$ y $j\notin A'$, $\Delta_j(A)\ge\Delta_j(A')$.
+Es decir, un nodo aporta menos a un grupo grande que a uno pequeño. Al grupo grande se le llama
+$A'$, y no $B$, para no confundirlo con el presupuesto.
+
+\paragraph{Utilidad implementada: cobertura.} El nodo $j$ aporta un conjunto $S_j$ de categorías de
+datos de un universo $U$, y
+\[
+  f(A)=\Big|\,C(A)\,\Big|,\qquad C(A)=\bigcup_{j\in A} S_j .
+\]
+Una categoría aportada por dos nodos cuenta una sola vez, igual que los datos redundantes.
+
+\paragraph{Tamaño de la entrada.} $(N,k)$ y dos costos de evaluación. En la implementación cada
+$S_j$ es un entero con un bit por categoría ($w=64$ bits por palabra):
+\begin{itemize}
+  \item $\tau=O(|U|/w)$: una ganancia marginal $\Delta_j(A)$, cuando lo ya cubierto $C(A)$ está
+  guardado (lo que hace el voraz);
+  \item $\tau_f=O(k\,|U|/w)$: $f(A)$ calculada desde cero, uniendo los $k$ conjuntos de $A$ (lo que
+  hace cada hoja del algoritmo exacto).
+\end{itemize}
+
+\subsection{Problema completo: las dos partes en secuencia}
+
+\begin{definicion}[Ronda de entrenamiento]
+\textbf{Entrada:} los nodos con sus conjuntos $S_j$ y sus utilidades $u_j$, el cupo $k$ y el
+presupuesto $B$. \textbf{Salida:} un grupo $A$ con $|A|=k$ y un reparto $x$ con $x_j=0$ si
+$j\notin A$ y $\sum_j x_j\le B$. \textbf{Criterio:} primero se maximiza la cobertura $f(A)$ (Parte~2)
+y luego, con $A$ fijo, la utilidad $\sum_{j\in A}u_j(x_j)$ (Parte~1).
+\end{definicion}
+
+\noindent La solución base resuelve la Parte~2 con el voraz de aproximación y la Parte~1 con el
+voraz exacto. Cuando dos nodos aportan las mismas categorías nuevas, el voraz de selección prefiere
+el de mayor $p_j=u_j(1)-u_j(0)$, la ganancia de su primera unidad de presupuesto (proporcional a
+$w_j$): así, a igual cobertura, entran los nodos que más aprovechan el reparto. Optimizar la
+cobertura y la utilidad a la vez queda fuera de esta entrega.
+
+\subsection{Versiones de decisión}
+
+Para hablar de P y NP se agrega un umbral $t$ y la pregunta se vuelve de sí o no:
+
+\begin{center}
+\begin{tabular}{>{\raggedright}p{0.14\linewidth}>{\raggedright\arraybackslash}p{0.76\linewidth}}
+\cabecera \cab{Problema} & \cab{Pregunta} \\
+\REP & ¿Existe un reparto con $\sum_i x_i\le B$ y $\sum_i u_i(x_i)\ge t$? \\
+\SEL & ¿Existe $A\subseteq V$ con $|A|=k$ y $f(A)\ge t$? \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{observacion}[Hacia dónde va la reducción]
+\REP{} se resuelve de forma exacta con el voraz de la Sección~\ref{sec:reparto}; la dificultad
+combinatoria está en elegir el grupo, así que la reducción va hacia \SEL. Con $B=0$ el problema
+completo es exactamente \SEL{} (no hay nada que repartir), de modo que la NP-dureza de \SEL{} se
+traslada al problema completo.
+\end{observacion}

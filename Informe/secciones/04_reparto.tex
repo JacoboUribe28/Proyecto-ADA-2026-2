@@ -1,0 +1,104 @@
+\section{Parte 1: reparto voraz con montículo}\label{sec:reparto}
+
+\subsection{Algoritmo}
+
+En esta sección $N$ es el número de nodos entre los que se reparte; en la solución completa son los
+$k$ elegidos, de modo que allí todas las cotas se leen con $N=k$. Se entregan las $B$ unidades una por una, siempre al nodo cuya \emph{siguiente} unidad aporta más.
+Un montículo de máximos guarda la próxima ganancia de cada nodo; la ganancia $g_i(x)$ se calcula
+solo cuando se necesita, nunca como una tabla de $N\times B$ valores.
+
+\begin{algorithm}[H]
+\caption{\textsc{RepartirVoraz}$(u_1,\dots,u_N,\ B,\ c)$ — \texttt{repartir\_voraz}}\label{alg:reparto}
+\KwIn{utilidades cóncavas y crecientes $u_i$; presupuesto $B$; topes opcionales $c_i$}
+\KwOut{reparto $x_1,\dots,x_N$ con $\sum_i x_i\le B$}
+$x_i\leftarrow 0$ para todo $i$\;
+$H\leftarrow$ montículo de máximos con $(g_i(0),\, i)$ para cada $i$ con $c_i>0$ \tcp*{$O(N)$}
+\For{$b\leftarrow 1$ \KwTo $B$}{
+  $(g,i)\leftarrow$ máximo de $H$\;
+  \lIf{$g\le 0$}{\textbf{terminar} \tcp*[f]{nadie aporta ya nada}}
+  $x_i\leftarrow x_i+1$\;
+  \eIf{$x_i = c_i$}{sacar $i$ de $H$ \tcp*{$O(\log N)$}}{reemplazar el máximo por $(g_i(x_i),\, i)$ \tcp*{$O(\log N)$}}
+}
+\Return{$x$}\;
+\end{algorithm}
+
+En Python, \texttt{heapq} es un montículo de \emph{mínimos}: se guarda $(-g,\,i)$ para que la mayor
+ganancia salga primero, y el índice $i$ rompe los empates a favor del menor. Reemplazar el máximo
+se hace en una sola operación, \texttt{heapreplace}.
+
+\subsection{Optimalidad}
+
+\begin{teorema}[Optimalidad del voraz]
+Si cada $u_i$ es cóncava y creciente, el Algoritmo~\ref{alg:reparto} devuelve un reparto de
+utilidad máxima.
+\end{teorema}
+\begin{proof}
+\emph{(1) La utilidad es una suma de ganancias.} Por suma telescópica,
+$\sum_i u_i(x_i)=\sum_i u_i(0)+\sum_i\sum_{y=0}^{x_i-1} g_i(y)$. El primer término no depende del
+reparto, así que maximizar la utilidad equivale a maximizar la suma de las ganancias usadas.
+
+\emph{(2) El voraz toma las mayores ganancias.} Por concavidad, la próxima ganancia de cada nodo es
+la mayor que le queda, y el montículo extrae la mayor entre todos los nodos. Sea $\lambda$ la menor
+ganancia que tomó el voraz: todo lo tomado es $\ge\lambda$ y todo lo no tomado es $\le\lambda$.
+
+\emph{(3) Intercambio.} Sea $x^*$ un reparto óptimo distinto del voraz $x^g$, ambos con la misma
+suma (sin topes se puede suponer $\sum_i x^*_i=B$, porque las ganancias son $\ge0$; si el voraz se
+detiene antes porque ya nadie aporta, las unidades restantes no cambian la utilidad). Hay un nodo
+$i$ con $x^*_i>x^g_i$ y otro $j$ con $x^*_j<x^g_j$. Mover una unidad de $i$ a $j$ cambia la
+utilidad en
+\[
+  g_j(x^*_j)-g_i(x^*_i-1)\ \ge\ \lambda-\lambda=0,
+\]
+porque la unidad $x^*_j$ de $j$ fue tomada por el voraz y la unidad $x^*_i-1$ de $i$ no. El nuevo
+reparto sigue siendo óptimo y su distancia a $x^g$ baja en 2.
+
+\emph{(4)} Repitiendo el intercambio se llega a $x^g$ sin perder utilidad.
+\end{proof}
+
+\begin{observacion}[Por qué se exige concavidad]
+Con ganancias que suben, el voraz falla. Dos nodos, $B=2$: el primero gana 1 y luego 10; el
+segundo gana 2 y luego 0. El voraz da una unidad a cada uno (utilidad 3), pero lo óptimo es dar
+las dos al primero (utilidad 11). La prueba automática correspondiente
+reproduce este caso.
+\end{observacion}
+
+\subsection{Función de eficiencia}
+
+Con constantes $c_1,\dots,c_6>0$ del modelo RAM y un montículo binario de altura
+$h=\floor{\log_2 N}$:
+
+\begin{center}
+\begin{tabular}{clcc}
+\cabecera \cab{Línea} & \cab{Operación} & \cab{Costo} & \cab{Veces} \\
+1 & inicializar $x_i$ & $c_1$ & $N$ \\
+2 & calcular $g_i(0)$ y construir el montículo & $\le c_2 N$ & 1 \\
+4--5 & leer el máximo y comprobar $g>0$ & $c_3$ & $\le B$ \\
+6--7 & $x_i\leftarrow x_i+1$ y revisar el tope & $c_4$ & $\le B$ \\
+8 o 10 & sacar $i$, o calcular $g_i(x_i)$ y reubicarlo & entre $c_5$ y $c_5 h$ & $\le B$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Sumando el peor caso (cada reubicación recorre toda la altura):
+\[
+  T_{\text{peor}}(N,B)=(c_1+c_2)N+(c_3+c_4)B+c_5\,B\floor{\log_2 N}\ \in\ \Theta(N+B\log N),
+\]
+y si cada reubicación termina tras una comparación (por ejemplo, ganancias iguales),
+$T_{\text{mejor}}(N,B)\in\Theta(N+B)$. Por lo tanto
+\begin{clave}
+$T(N,B)\in O(N+B\log N)$ y $\Omega(N+B)$; si $B\ge N$, $\Theta(N+B\log N)=\Theta(B\log N)$,
+que es la cota del enunciado. En la solución completa se reparte entre los $k$ elegidos:
+$O(k+B\log k)$.
+\end{clave}
+
+\paragraph{Pseudo-polinomialidad.} $B$ se escribe con $\ceil{\log_2(B+1)}$ bits, pero el voraz hace
+$B$ pasos: es polinomial en el \emph{valor} de $B$ y exponencial en su \emph{longitud}, igual que la
+programación dinámica $O(nW)$ de la mochila 0/1. Como el voraz toma exactamente las ganancias
+mayores que un umbral $\lambda$, podría buscarse $\lambda$ por bisección y obtener una cota
+polinomial en la longitud de $B$ cuando las ganancias son enteras y acotadas; con
+$u_i(x)=w_i\ln(1+x)$ las ganancias son reales, así que este informe no usa ese argumento y la cota
+que se demuestra es la pseudo-polinomial.
+
+\paragraph{Presupuesto continuo.} Si $x_i\in\R_{\ge0}$, en el óptimo todos los nodos que reciben
+presupuesto quedan con la misma ganancia marginal $\lambda$ (nivelación o \emph{water-filling}).
+Con $u_i(x)=w_i\ln(1+x)$ resulta $x_i=\max(0,\ w_i/\lambda-1)$.

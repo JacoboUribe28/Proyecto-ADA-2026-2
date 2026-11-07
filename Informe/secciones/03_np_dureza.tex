@@ -1,0 +1,95 @@
+\section{NP-dureza de la selección}\label{sec:reduccion}
+
+\begin{definicion}[Reducción polinomial]
+$X\le_p Y$ si existe una función $\varphi$, calculable en tiempo polinomial, que transforma cada
+instancia $I$ de $X$ en una instancia $\varphi(I)$ de $Y$ tal que $I$ tiene respuesta \emph{sí}
+$\iff$ $\varphi(I)$ tiene respuesta \emph{sí}. Si $X$ es NP-difícil y $X\le_p Y$, entonces $Y$ es
+NP-difícil.
+\end{definicion}
+
+\begin{observacion}[Dirección]
+Para probar que \emph{nuestro} problema es difícil, se reduce \textbf{desde} un problema conocido
+como difícil \textbf{hacia} el nuestro: si \SEL{} se resolviera en tiempo polinomial, componiendo
+con $\varphi$ se resolvería el problema conocido. La dirección contraria no demostraría nada.
+\end{observacion}
+
+\begin{definicion}[Cobertura Máxima, \MC]
+Dados un universo $U$, conjuntos $S_1,\dots,S_m\subseteq U$ y enteros $k$ y $t$: ¿existen $k$
+conjuntos cuya unión tenga al menos $t$ elementos?
+\end{definicion}
+
+\paragraph{Cadena hasta un problema clásico.} Cobertura de Vértices es NP-completo (Karp, 1972) y se
+reduce a \SC{} (universo $=$ aristas; el conjunto del vértice $v$ $=$ sus aristas incidentes).
+\SC{} se reduce a \MC{} tomando $t=|U|$. Por lo tanto \MC{} es NP-difícil. Se escoge \MC{}
+porque tiene la misma estructura que \SEL: elegir $k$ objetos cuyas contribuciones se solapan.
+
+\subsection{Construcción de la reducción}
+
+Dada $I=(U,S_1,\dots,S_m,k,t)$ con $1\le k\le m$, se construye $\varphi(I)=(V,f,k',t')$ como
+sigue.\footnote{Si $k>m$ se toman todos los conjuntos y se decide comparando $|\bigcup_i S_i|$ con
+$t$; si $k=0$ la respuesta es \emph{sí} solo cuando $t\le0$. En ambos casos $\varphi$ devuelve una
+instancia fija con esa misma respuesta.}
+
+\begin{center}
+\begin{tabular}{>{\raggedright}p{0.14\linewidth}>{\raggedright}p{0.3\linewidth}>{\raggedright\arraybackslash}p{0.44\linewidth}}
+\cabecera \cab{Componente} & \cab{Se construye} & \cab{Por qué} \\
+Nodos & $V=\{1,\dots,m\}$, $N=m$ & Escoger el nodo $i$ equivale a escoger $S_i$ \\
+Utilidad & $f(A)=\big|\bigcup_{i\in A}S_i\big|$ & Cuenta exactamente lo que cuenta \MC \\
+Cupo y umbral & $k'=k$, $t'=t$ & Mismo número de elecciones, misma meta \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent $V$ son los nodos (lo que se \emph{escoge}) y $U$ los elementos (lo que se \emph{cubre}).
+En el repositorio, la construcción es \texttt{desde\_cobertura\_maxima} (\texttt{src/red/seleccion.py}).
+
+\begin{lema}[La instancia construida es válida]\label{lem:valida}
+Para $A\subseteq V$ y $j\notin A$, $\Delta_j(A)=|S_j\setminus C(A)|$. En consecuencia, $f$ es
+normalizada, monótona y submodular.
+\end{lema}
+\begin{proof}
+$C(A\cup\{j\})$ es la unión disjunta de $C(A)$ y $S_j\setminus C(A)$, de donde sale la fórmula.
+Normalizada: $f(\emptyset)=0$. Monótona: $|S_j\setminus C(A)|\ge0$. Submodular: si $A\subseteq A'$
+entonces $C(A)\subseteq C(A')$, luego $S_j\setminus C(A')\subseteq S_j\setminus C(A)$ y por lo
+tanto $\Delta_j(A')\le\Delta_j(A)$.
+\end{proof}
+
+\begin{lema}[$\varphi$ es polinomial]
+Copiar los conjuntos cuesta $\Theta\big(m+\sum_i|S_i|\big)$ y evaluar $f$ cuesta
+$\Theta\big(|U|+\sum_{i\in A}|S_i|\big)$. Ambos son lineales en el tamaño de $I$, y la instancia
+construida no crece de forma exponencial.
+\end{lema}
+
+\begin{teorema}[$\varphi$ conserva la respuesta]
+$I$ tiene respuesta \emph{sí} en \MC{} $\iff$ $\varphi(I)$ tiene respuesta \emph{sí} en \SEL.
+\end{teorema}
+\begin{proof}
+($\Rightarrow$) Si $|S_{i_1}\cup\dots\cup S_{i_k}|\ge t$, el grupo $A=\{i_1,\dots,i_k\}$ cumple
+$|A|=k$ y $f(A)\ge t$. ($\Leftarrow$) Si existe $A$ con $|A|=k$ y $f(A)\ge t$, los conjuntos
+$\{S_i:i\in A\}$ son $k$ conjuntos con unión de al menos $t$ elementos. Si la versión de \MC{}
+admite \emph{a lo sumo} $k$ conjuntos, se completan hasta $k$ y, por monotonía, la unión no baja.
+\end{proof}
+
+\noindent Las dos direcciones son necesarias. Con solo ($\Rightarrow$), una $\varphi$ que siempre
+produjera instancias \emph{sí} pasaría la prueba sin ser una reducción. La dirección
+($\Leftarrow$) garantiza que $\varphi$ no crea soluciones que no existían.
+
+\begin{teorema}
+\SEL{} es NP-difícil y su versión de decisión es NP-completa.
+\end{teorema}
+\begin{proof}
+\MC{} es NP-difícil y $\MC\le_p\SEL$ por los tres resultados anteriores. Además $\SEL\in$ NP: un
+grupo $A$ es un certificado que se verifica en tiempo $O(k\,|U|)$.
+\end{proof}
+
+\paragraph{Ejemplo.} $U=\{1,\dots,6\}$, $S_1=\{1,2,3\}$, $S_2=\{3,4\}$, $S_3=\{4,5,6\}$,
+$S_4=\{1,4\}$, $k=2$, $t=6$. De los seis pares, solo $\{1,3\}$ cubre los 6 elementos: ambos
+problemas responden \emph{sí} con el mismo testigo. Si se cambia $S_3$ por $\{4,5\}$, el elemento 6
+no aparece en ningún conjunto y ambos responden \emph{no}. Una prueba automática comprueba la equivalencia en 150 instancias
+aleatorias.
+
+\begin{observacion}
+La NP-dureza no demuestra que todo algoritmo exacto sea exponencial: demuestra que un algoritmo
+exacto polinomial implicaría P$=$NP. Por eso la selección se resuelve con el voraz de la
+Sección~\ref{sec:seleccion}, que tiene garantía de aproximación.
+\end{observacion}

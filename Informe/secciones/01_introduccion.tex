@@ -1,0 +1,38 @@
+\section{Introducción y alcance}
+
+Una red de $N$ nodos entrena un modelo de forma colaborativa, sin compartir datos crudos. Cada
+actualización se protege con ruido calibrado: más ruido protege más la privacidad, pero reduce la
+utilidad de la actualización. En cada ronda hay que tomar dos decisiones:
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Selección (Parte 2):} qué $k$ nodos participan.
+  \item \textbf{Reparto (Parte 1):} cuántas unidades del presupuesto de ruido $B$ recibe cada nodo elegido.
+\end{enumerate}
+
+Las dos decisiones tienen dificultades muy distintas, y esa diferencia es la idea central del informe:
+
+\begin{center}
+\begin{tabular}{>{\raggedright}p{0.2\linewidth}>{\raggedright}p{0.33\linewidth}>{\raggedright\arraybackslash}p{0.33\linewidth}}
+\cabecera \cab{} & \cab{Parte 1 · Reparto} & \cab{Parte 2 · Selección} \\
+Decide & Cuántas unidades $x_i$ recibe cada nodo & Cuáles $k$ nodos participan \\
+Dificultad & Voraz \textbf{exacto} (pseudo-polinomial) & \textbf{NP-difícil}: voraz aproximado \\
+Algoritmo & Voraz con montículo, $O(n + B\log n)$ con $n$ nodos a repartir ($n=k$ en el programa) & Voraz, $\Theta(N k)$ evaluaciones; garantía $1-1/e$ \\
+Exacto de referencia & El propio voraz & Árbol incluir/no incluir, $\binom{N}{k}$ evaluaciones \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Qué cubre esta primera entrega.} La guía exige, para el Grupo~2: (i)~la formalización de
+las dos partes del problema; (ii)~la prueba formal de NP-dureza por reducción polinomial desde
+Cobertura Máxima; (iii)~un repositorio con la solución base, sus dependencias, README e
+instrucciones; (iv)~un manual técnico; y (v)~ejecutar la solución base con el caso de la profesora,
+entregando resultados, tiempo y traza por caso. Todo se encuentra en el repositorio
+\texttt{Proyecto-ADA-2026-2}, cuya versión está en el archivo \texttt{VERSION} y se estampa en cada
+salida. La Sección~\ref{sec:evidencias} indica dónde está cada requisito de la guía.
+
+\begin{clave}
+Resultado principal: en el caso de la profesora ($N=15$, $k=5$, $B=30$), ejecutado sobre el archivo
+tal como se recibió, el voraz elige N04, N15, N14, N13 y N06, cubre las 20 categorías (igual al
+óptimo exacto) y reparte el presupuesto en 7-5-6-5-7 con utilidad 99.5821, igual al óptimo por
+programación dinámica para esos cinco nodos.
+\end{clave}

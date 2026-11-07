@@ -1,0 +1,373 @@
+{
+  "version": "1.1.0",
+  "caso": "entrada_G2_red_15_nodos",
+  "seleccion": [
+    {
+      "paso": 1,
+      "elegido": "N04",
+      "ganancia": 7,
+      "categorias_nuevas": [
+        "K01",
+        "K02",
+        "K06",
+        "K09",
+        "K12",
+        "K13",
+        "K14"
+      ],
+      "f_acumulada": 7,
+      "ganancias_candidatos": {
+        "N01": 3,
+        "N02": 3,
+        "N03": 6,
+        "N04": 7,
+        "N05": 5,
+        "N06": 7,
+        "N07": 4,
+        "N08": 4,
+        "N09": 6,
+        "N10": 6,
+        "N11": 3,
+        "N12": 4,
+        "N13": 7,
+        "N14": 7,
+        "N15": 7
+      }
+    },
+    {
+      "paso": 2,
+      "elegido": "N15",
+      "ganancia": 6,
+      "categorias_nuevas": [
+        "K03",
+        "K08",
+        "K10",
+        "K16",
+        "K17",
+        "K19"
+      ],
+      "f_acumulada": 13,
+      "ganancias_candidatos": {
+        "N01": 1,
+        "N02": 2,
+        "N03": 5,
+        "N05": 3,
+        "N06": 3,
+        "N07": 3,
+        "N08": 2,
+        "N09": 3,
+        "N10": 3,
+        "N11": 3,
+        "N12": 2,
+        "N13": 6,
+        "N14": 5,
+        "N15": 6
+      }
+    },
+    {
+      "paso": 3,
+      "elegido": "N14",
+      "ganancia": 4,
+      "categorias_nuevas": [
+        "K04",
+        "K07",
+        "K11",
+        "K15"
+      ],
+      "f_acumulada": 17,
+      "ganancias_candidatos": {
+        "N01": 0,
+        "N02": 1,
+        "N03": 3,
+        "N05": 3,
+        "N06": 2,
+        "N07": 1,
+        "N08": 1,
+        "N09": 2,
+        "N10": 2,
+        "N11": 1,
+        "N12": 2,
+        "N13": 2,
+        "N14": 4
+      }
+    },
+    {
+      "paso": 4,
+      "elegido": "N13",
+      "ganancia": 2,
+      "categorias_nuevas": [
+        "K05",
+        "K20"
+      ],
+      "f_acumulada": 19,
+      "ganancias_candidatos": {
+        "N01": 0,
+        "N02": 0,
+        "N03": 1,
+        "N05": 1,
+        "N06": 1,
+        "N07": 0,
+        "N08": 1,
+        "N09": 1,
+        "N10": 1,
+        "N11": 1,
+        "N12": 1,
+        "N13": 2
+      }
+    },
+    {
+      "paso": 5,
+      "elegido": "N06",
+      "ganancia": 1,
+      "categorias_nuevas": [
+        "K18"
+      ],
+      "f_acumulada": 20,
+      "ganancias_candidatos": {
+        "N01": 0,
+        "N02": 0,
+        "N03": 0,
+        "N05": 1,
+        "N06": 1,
+        "N07": 0,
+        "N08": 0,
+        "N09": 0,
+        "N10": 0,
+        "N11": 1,
+        "N12": 0
+      }
+    }
+  ],
+  "reparto": [
+    {
+      "unidad": 1,
+      "nodo": "N04",
+      "ganancia": 8.317766166719343,
+      "unidades_del_nodo": 1
+    },
+    {
+      "unidad": 2,
+      "nodo": "N06",
+      "ganancia": 7.693933704215392,
+      "unidades_del_nodo": 1
+    },
+    {
+      "unidad": 3,
+      "nodo": "N14",
+      "ganancia": 7.000786523655447,
+      "unidades_del_nodo": 1
+    },
+    {
+      "unidad": 4,
+      "nodo": "N15",
+      "ganancia": 6.58489821531948,
+      "unidades_del_nodo": 1
+    },
+    {
+      "unidad": 5,
+      "nodo": "N13",
+      "ganancia": 5.753121598647547,
+      "unidades_del_nodo": 1
+    },
+    {
+      "unidad": 6,
+      "nodo": "N04",
+      "ganancia": 4.865581297297972,
+      "unidades_del_nodo": 2
+    },
+    {
+      "unidad": 7,
+      "nodo": "N06",
+      "ganancia": 4.500662700000623,
+      "unidades_del_nodo": 2
+    },
+    {
+      "unidad": 8,
+      "nodo": "N14",
+      "ganancia": 4.095197591892459,
+      "unidades_del_nodo": 2
+    },
+    {
+      "unidad": 9,
+      "nodo": "N15",
+      "ganancia": 3.8519185270275607,
+      "unidades_del_nodo": 2
+    },
+    {
+      "unidad": 10,
+      "nodo": "N04",
+      "ganancia": 3.452184869421372,
+      "unidades_del_nodo": 3
+    },
+    {
+      "unidad": 11,
+      "nodo": "N13",
+      "ganancia": 3.365360397297764,
+      "unidades_del_nodo": 2
+    },
+    {
+      "unidad": 12,
+      "nodo": "N06",
+      "ganancia": 3.193271004214769,
+      "unidades_del_nodo": 3
+    },
+    {
+      "unidad": 13,
+      "nodo": "N14",
+      "ganancia": 2.905588931762988,
+      "unidades_del_nodo": 3
+    },
+    {
+      "unidad": 14,
+      "nodo": "N15",
+      "ganancia": 2.7329796882919197,
+      "unidades_del_nodo": 3
+    },
+    {
+      "unidad": 15,
+      "nodo": "N04",
+      "ganancia": 2.6777226157705165,
+      "unidades_del_nodo": 4
+    },
+    {
+      "unidad": 16,
+      "nodo": "N06",
+      "ganancia": 2.4768934195877277,
+      "unidades_del_nodo": 4
+    },
+    {
+      "unidad": 17,
+      "nodo": "N13",
+      "ganancia": 2.3877612013497824,
+      "unidades_del_nodo": 3
+    },
+    {
+      "unidad": 18,
+      "nodo": "N14",
+      "ganancia": 2.253749868273518,
+      "unidades_del_nodo": 4
+    },
+    {
+      "unidad": 19,
+      "nodo": "N04",
+      "ganancia": 2.187858681527456,
+      "unidades_del_nodo": 5
+    },
+    {
+      "unidad": 20,
+      "nodo": "N15",
+      "ganancia": 2.1198637374849922,
+      "unidades_del_nodo": 4
+    },
+    {
+      "unidad": 21,
+      "nodo": "N06",
+      "ganancia": 2.023769280412897,
+      "unidades_del_nodo": 5
+    },
+    {
+      "unidad": 22,
+      "nodo": "N13",
+      "ganancia": 1.8520914759079408,
+      "unidades_del_nodo": 4
+    },
+    {
+      "unidad": 23,
+      "nodo": "N04",
+      "ganancia": 1.8498081579270993,
+      "unidades_del_nodo": 6
+    },
+    {
+      "unidad": 24,
+      "nodo": "N14",
+      "ganancia": 1.8414477236189422,
+      "unidades_del_nodo": 5
+    },
+    {
+      "unidad": 25,
+      "nodo": "N15",
+      "ganancia": 1.7320547895425693,
+      "unidades_del_nodo": 5
+    },
+    {
+      "unidad": 26,
+      "nodo": "N06",
+      "ganancia": 1.7110725460825669,
+      "unidades_del_nodo": 6
+    },
+    {
+      "unidad": 27,
+      "nodo": "N04",
+      "ganancia": 1.6023767114942702,
+      "unidades_del_nodo": 7
+    },
+    {
+      "unidad": 28,
+      "nodo": "N14",
+      "ganancia": 1.5569218662553086,
+      "unidades_del_nodo": 6
+    },
+    {
+      "unidad": 29,
+      "nodo": "N13",
+      "ganancia": 1.5132689213898238,
+      "unidades_del_nodo": 5
+    },
+    {
+      "unidad": 30,
+      "nodo": "N06",
+      "ganancia": 1.4821984581321999,
+      "unidades_del_nodo": 7
+    }
+  ],
+  "verificacion": {
+    "|A| = k": {
+      "cumple": true,
+      "detalle": "|A| = 5, k = 5"
+    },
+    "nodos de A válidos y sin repetir": {
+      "cumple": true,
+      "detalle": ""
+    },
+    "f(A) de la traza = f(A) recalculada": {
+      "cumple": true,
+      "detalle": "20 vs 20"
+    },
+    "ganancias de la selección no crecientes": {
+      "cumple": true,
+      "detalle": "consecuencia de la submodularidad"
+    },
+    "garantía f(voraz) >= (1 - 1/e) f(óptimo)": {
+      "cumple": true,
+      "detalle": "20 >= 12.6424"
+    },
+    "x_i entero >= 0": {
+      "cumple": true,
+      "detalle": ""
+    },
+    "x_i = 0 si el nodo no participa": {
+      "cumple": true,
+      "detalle": ""
+    },
+    "suma de x_i <= B": {
+      "cumple": true,
+      "detalle": "suma = 30, B = 30"
+    },
+    "utilidad recalculada coincide": {
+      "cumple": true,
+      "detalle": "99.582111 vs 99.582111"
+    },
+    "ganancias del reparto no crecientes": {
+      "cumple": true,
+      "detalle": "consecuencia de la concavidad"
+    },
+    "ninguna transferencia de una unidad mejora el reparto": {
+      "cumple": true,
+      "detalle": "mejor cambio = 0.00e+00"
+    },
+    "no sobra presupuesto que algún nodo aproveche": {
+      "cumple": true,
+      "detalle": "sobran 0 unidades"
+    }
+  }
+}

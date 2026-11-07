@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Salidas de prueba (las oficiales van en resultados/)
+resultados_*/
+
+# Archivos intermedios de LaTeX (se versionan main.tex, las secciones y main.pdf)
+Informe/*.aux
+Informe/*.log
+Informe/*.toc
+Informe/*.out
+Informe/*.synctex.gz

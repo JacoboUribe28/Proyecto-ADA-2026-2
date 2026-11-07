@@ -1,0 +1,168 @@
+% formato.sty — estilo propio del informe del Proyecto ADA 2026-2 (Jacobo Uribe Montoya, 36921)
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{formato}[2026/11/06 Estilo del informe Proyecto ADA 2026-2]
+
+% ---------------------------------------------------------------- idioma y fuentes
+\RequirePackage[T1]{fontenc}
+\RequirePackage[utf8]{inputenc}
+\RequirePackage{babel}
+\babelprovide[import,main]{spanish}   % español desde los archivos .ini de babel
+\AtBeginDocument{\renewcommand{\tablename}{Tabla}\renewcommand{\contentsname}{Contenido}}
+\RequirePackage{lmodern}
+\RequirePackage[scaled=0.92]{helvet}      % títulos en sans
+\RequirePackage{microtype}
+
+% ---------------------------------------------------------------- página
+\RequirePackage[letterpaper,top=2.6cm,bottom=2.6cm,left=2.7cm,right=2.7cm,headheight=16pt]{geometry}
+\RequirePackage{setspace}
+\setstretch{1.12}
+\setlength{\parskip}{0.55em}
+\setlength{\parindent}{0pt}
+\setlength{\emergencystretch}{3em}   % evita desbordes con nombres de archivo largos
+
+% ---------------------------------------------------------------- colores
+\RequirePackage{xcolor}
+\definecolor{tinta}{RGB}{33,37,41}
+\definecolor{verdeazul}{RGB}{0,105,92}
+\definecolor{verdeclaro}{RGB}{224,242,239}
+\definecolor{ambar}{RGB}{191,120,0}
+\definecolor{ambarclaro}{RGB}{255,244,224}
+\definecolor{gris}{RGB}{110,117,125}
+\color{tinta}
+
+% ---------------------------------------------------------------- matemáticas
+\RequirePackage{amsmath,amssymb,amsthm,mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\REP}{\textsc{Rep}}
+\newcommand{\SEL}{\textsc{Sel}}
+\newcommand{\MC}{\textsc{MaxCover}}
+\newcommand{\SC}{\textsc{SetCover}}
+
+% ---------------------------------------------------------------- títulos de sección
+\RequirePackage{titlesec}
+\titleformat{\section}{\sffamily\Large\bfseries\color{verdeazul}}
+  {\colorbox{verdeazul}{\textcolor{white}{\,\thesection\,}}}{0.6em}{}[\vspace{-0.4em}\textcolor{verdeazul}{\rule{\linewidth}{0.6pt}}]
+\titleformat{\subsection}{\sffamily\large\bfseries\color{verdeazul}}{\thesubsection}{0.6em}{}
+\titleformat{\subsubsection}{\sffamily\normalsize\bfseries\color{tinta}}{\thesubsubsection}{0.6em}{}
+\titlespacing*{\section}{0pt}{1.6em}{0.9em}
+
+% ---------------------------------------------------------------- encabezado y pie
+\RequirePackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\sffamily\small\color{gris}Proyecto ADA 2026-2 · Red}
+\fancyhead[R]{\sffamily\small\color{gris}Jacobo Uribe Montoya · 36921}
+\fancyfoot[C]{\sffamily\small\color{verdeazul}\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{verdeazul}\leaders\hrule height \headrulewidth\hfill}}
+
+% ---------------------------------------------------------------- cajas de teoremas
+\RequirePackage[most]{tcolorbox}
+\theoremstyle{definition}
+\newtheorem{definicion}{Definición}[section]
+\newtheorem{teorema}[definicion]{Teorema}
+\newtheorem{lema}[definicion]{Lema}
+\newtheorem{proposicion}[definicion]{Proposición}
+\newtheorem{observacion}[definicion]{Observación}
+\tcolorboxenvironment{definicion}{enhanced,breakable,colback=verdeclaro,colframe=verdeclaro,
+  borderline west={3pt}{0pt}{verdeazul},arc=0pt,boxrule=0pt,left=8pt,right=8pt,top=4pt,bottom=4pt}
+\tcolorboxenvironment{teorema}{enhanced,breakable,colback=white,colframe=verdeazul,
+  arc=2pt,boxrule=0.8pt,left=8pt,right=8pt,top=4pt,bottom=4pt}
+\tcolorboxenvironment{lema}{enhanced,breakable,colback=white,colframe=verdeazul!60,
+  arc=2pt,boxrule=0.6pt,left=8pt,right=8pt,top=4pt,bottom=4pt}
+\tcolorboxenvironment{proposicion}{enhanced,breakable,colback=white,colframe=verdeazul,
+  arc=2pt,boxrule=0.8pt,left=8pt,right=8pt,top=4pt,bottom=4pt}
+\tcolorboxenvironment{observacion}{enhanced,breakable,colback=ambarclaro,colframe=ambarclaro,
+  borderline west={3pt}{0pt}{ambar},arc=0pt,boxrule=0pt,left=8pt,right=8pt,top=4pt,bottom=4pt}
+\renewcommand{\qedsymbol}{\textcolor{verdeazul}{$\blacksquare$}}
+
+% Caja de resultado clave
+\newtcolorbox{clave}{enhanced,colback=verdeazul,colframe=verdeazul,coltext=white,arc=2pt,
+  boxrule=0pt,left=10pt,right=10pt,top=6pt,bottom=6pt,fontupper=\sffamily\bfseries}
+
+% ---------------------------------------------------------------- tablas, figuras, listas
+\RequirePackage{booktabs,array,tabularx,longtable}
+\RequirePackage{colortbl}
+\newcommand{\cabecera}{\rowcolor{verdeazul}}
+\newcommand{\cab}[1]{\textcolor{white}{\sffamily\bfseries #1}}
+\renewcommand{\arraystretch}{1.25}
+\RequirePackage{graphicx}
+\RequirePackage{float}
+\RequirePackage{caption}
+\captionsetup{font=small,labelfont={bf,sf,color=verdeazul}}
+\RequirePackage{enumitem}
+\setlist{itemsep=0.25em,topsep=0.3em}
+\setlist[itemize]{label=\textcolor{verdeazul}{\small$\blacktriangleright$}}
+
+% ---------------------------------------------------------------- pseudocódigo
+\RequirePackage[spanish,ruled,vlined,linesnumbered]{algorithm2e}
+\SetAlCapFnt{\sffamily\color{verdeazul}}
+\SetAlCapNameFnt{\sffamily\color{verdeazul}}
+\SetKwComment{tcp}{\textcolor{gris}{$\triangleright$ }}{}
+% Palabras clave en español (la opción del paquete no traduce todas en esta instalación)
+\SetKwInput{KwIn}{Entrada}
+\SetKwInput{KwOut}{Salida}
+\SetKwIF{If}{ElseIf}{Else}{si}{entonces}{si no, si}{si no}{fin si}
+\SetKwFor{For}{para}{hacer}{fin para}
+\SetKwFor{ForEach}{para cada}{hacer}{fin para}
+\SetKwFor{While}{mientras}{hacer}{fin mientras}
+\SetKw{KwTo}{hasta}
+\SetKw{KwRet}{devolver}
+\SetKw{Return}{devolver}
+
+% ---------------------------------------------------------------- código fuente
+\RequirePackage{listings}
+\lstdefinestyle{codigo}{
+  language=Python, basicstyle=\ttfamily\scriptsize, keywordstyle=\color{verdeazul}\bfseries,
+  commentstyle=\color{gris}\itshape, stringstyle=\color{ambar}, numbers=left,
+  numberstyle=\tiny\color{gris}, frame=leftline, rulecolor=\color{verdeazul}, framerule=1.5pt,
+  backgroundcolor=\color{verdeclaro!40}, breaklines=true, showstringspaces=false, tabsize=4,
+  literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1 {ñ}{{\~n}}1
+           {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1 {Ñ}{{\~N}}1
+           {Δ}{{$\Delta$}}1 {≥}{{$\geq$}}1 {≤}{{$\leq$}}1 {τ}{{$\tau$}}1 {θ}{{$\theta$}}1
+           {—}{{---}}1 {–}{{--}}1 {·}{{$\cdot$}}1 {×}{{$\times$}}1 {→}{{$\to$}}1 {«}{{\guillemotleft}}1 {»}{{\guillemotright}}1}
+\lstset{style=codigo}
+
+% ---------------------------------------------------------------- enlaces
+\RequirePackage[hidelinks]{hyperref}
+\hypersetup{pdfauthor={Jacobo Uribe Montoya (36921)},pdftitle={Proyecto ADA 2026-2 - Red}}
+
+% ---------------------------------------------------------------- portada
+\newcommand{\portada}{%
+  \begin{titlepage}
+    \thispagestyle{empty}
+    \begin{tikzpicture}[remember picture,overlay]
+      \fill[verdeazul] (current page.north west) rectangle ([yshift=-7.2cm]current page.north east);
+      \fill[ambar] ([yshift=-7.2cm]current page.north west) rectangle ([yshift=-7.45cm]current page.north east);
+      \node[anchor=north west,text=white,font=\sffamily\large] at ([xshift=2.7cm,yshift=-1.6cm]current page.north west)
+        {Universidad de Caldas · Análisis y Diseño de Algoritmos · 2026-2};
+      \node[anchor=north west,text=white,font=\sffamily\fontsize{30}{34}\selectfont\bfseries] at ([xshift=2.7cm,yshift=-2.7cm]current page.north west)
+        {Proyecto ADA 2026-2};
+      \node[anchor=north west,text=white!85!verdeazul,font=\sffamily\Large] at ([xshift=2.7cm,yshift=-4.4cm]current page.north west)
+        {Red · Primera entrega};
+    \end{tikzpicture}\par
+    \vspace*{6.2cm}
+    {\sffamily\fontsize{22}{27}\selectfont\bfseries\color{tinta}
+      Selección de participantes y\\[0.2em] reparto del presupuesto de ruido\par}
+    \vspace{0.8em}
+    {\sffamily\large\color{gris} Formalización, NP-dureza por reducción, algoritmos con sus funciones de
+      eficiencia y solución base ejecutable\par}
+    \vfill
+    \begin{tcolorbox}[enhanced,colback=verdeclaro,colframe=verdeclaro,borderline west={4pt}{0pt}{verdeazul},
+        arc=0pt,boxrule=0pt,left=12pt,top=10pt,bottom=10pt]
+      \sffamily
+      \begin{tabular}{@{}ll@{}}
+        \textcolor{gris}{Autor}   & \textbf{Jacobo Uribe Montoya} \\
+        \textcolor{gris}{Código}  & \textbf{36921} \\
+        \textcolor{gris}{Docente} & Luz Enith Guerrero Mendieta \\
+        \textcolor{gris}{Versión del código} & \input{../VERSION}\unskip\ (archivo \texttt{VERSION}) \\
+        \textcolor{gris}{Fecha}   & Noviembre de 2026
+      \end{tabular}
+    \end{tcolorbox}
+  \end{titlepage}}
+\RequirePackage{tikz}
+
+\endinput

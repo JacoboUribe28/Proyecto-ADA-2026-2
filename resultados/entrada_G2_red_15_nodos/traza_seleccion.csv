@@ -1,0 +1,6 @@
+paso,nodo,ganancia_marginal,f_acumulada,categorias_nuevas
+1,N04,7,7,K01 K02 K06 K09 K12 K13 K14
+2,N15,6,13,K03 K08 K10 K16 K17 K19
+3,N14,4,17,K04 K07 K11 K15
+4,N13,2,19,K05 K20
+5,N06,1,20,K18

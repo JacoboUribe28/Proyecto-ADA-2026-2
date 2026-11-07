@@ -1,0 +1,103 @@
+{
+  "version_codigo": "1.1.0",
+  "nombre": "entrada_G2_red_15_nodos",
+  "formato": "profesora",
+  "N": 15,
+  "k": 5,
+  "B": 30,
+  "utilidad_individual": "w_i * ln(1 + x)",
+  "origen_categorias": "sintéticas, generadas al leer el caso para 15 de 15 nodos (semilla 36921, universo 20, entre 3 y 7 por nodo); el archivo de entrada no se modifica",
+  "desempate_seleccion": "mayor ganancia de la primera unidad u_i(1) - u_i(0); luego, menor posición",
+  "seleccion": [
+    "N04",
+    "N15",
+    "N14",
+    "N13",
+    "N06"
+  ],
+  "f_voraz": 20,
+  "categorias_universo": 20,
+  "reparto": {
+    "N04": 7,
+    "N15": 5,
+    "N14": 6,
+    "N13": 5,
+    "N06": 7
+  },
+  "utilidad_total": 99.58211067052225,
+  "tiempo_seleccion_s": 7.68199998901764e-06,
+  "tiempo_reparto_s": 1.0153000005175272e-05,
+  "tiempo_total_s": 1.7834999994192913e-05,
+  "repeticiones": 5,
+  "seleccion_optima": {
+    "f_opt": 20,
+    "A_opt": [
+      "N01",
+      "N06",
+      "N13",
+      "N14",
+      "N15"
+    ],
+    "evaluaciones": 3003,
+    "tiempo_s": 0.0014932420000093316,
+    "razon_voraz_opt": 1.0,
+    "cota_1_menos_1_sobre_e": 0.6321205588285577,
+    "cumple_cota": true
+  },
+  "verificacion": {
+    "|A| = k": {
+      "cumple": true,
+      "detalle": "|A| = 5, k = 5"
+    },
+    "nodos de A válidos y sin repetir": {
+      "cumple": true,
+      "detalle": ""
+    },
+    "f(A) de la traza = f(A) recalculada": {
+      "cumple": true,
+      "detalle": "20 vs 20"
+    },
+    "ganancias de la selección no crecientes": {
+      "cumple": true,
+      "detalle": "consecuencia de la submodularidad"
+    },
+    "garantía f(voraz) >= (1 - 1/e) f(óptimo)": {
+      "cumple": true,
+      "detalle": "20 >= 12.6424"
+    },
+    "x_i entero >= 0": {
+      "cumple": true,
+      "detalle": ""
+    },
+    "x_i = 0 si el nodo no participa": {
+      "cumple": true,
+      "detalle": ""
+    },
+    "suma de x_i <= B": {
+      "cumple": true,
+      "detalle": "suma = 30, B = 30"
+    },
+    "utilidad recalculada coincide": {
+      "cumple": true,
+      "detalle": "99.582111 vs 99.582111"
+    },
+    "ganancias del reparto no crecientes": {
+      "cumple": true,
+      "detalle": "consecuencia de la concavidad"
+    },
+    "ninguna transferencia de una unidad mejora el reparto": {
+      "cumple": true,
+      "detalle": "mejor cambio = 0.00e+00"
+    },
+    "no sobra presupuesto que algún nodo aproveche": {
+      "cumple": true,
+      "detalle": "sobran 0 unidades"
+    }
+  },
+  "restricciones_ok": true,
+  "reparto_optimo_dp": {
+    "utilidad_dp": 99.58211067052224,
+    "diferencia": -1.4210854715202004e-14,
+    "voraz_es_optimo": true
+  }
+}

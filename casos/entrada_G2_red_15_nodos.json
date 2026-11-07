@@ -1,0 +1,69 @@
+{
+  "parametros": {
+    "numero_nodos": 15,
+    "cupo_participantes_por_ronda_k": 5,
+    "presupuesto_ruido_por_ronda_B": 30
+  },
+  "nodos": [
+    {
+      "id": "N01",
+      "coeficiente_utilidad": 8.5
+    },
+    {
+      "id": "N02",
+      "coeficiente_utilidad": 10.2
+    },
+    {
+      "id": "N03",
+      "coeficiente_utilidad": 9.1
+    },
+    {
+      "id": "N04",
+      "coeficiente_utilidad": 12.0
+    },
+    {
+      "id": "N05",
+      "coeficiente_utilidad": 7.8
+    },
+    {
+      "id": "N06",
+      "coeficiente_utilidad": 11.1
+    },
+    {
+      "id": "N07",
+      "coeficiente_utilidad": 8.9
+    },
+    {
+      "id": "N08",
+      "coeficiente_utilidad": 10.6
+    },
+    {
+      "id": "N09",
+      "coeficiente_utilidad": 9.9
+    },
+    {
+      "id": "N10",
+      "coeficiente_utilidad": 12.4
+    },
+    {
+      "id": "N11",
+      "coeficiente_utilidad": 7.6
+    },
+    {
+      "id": "N12",
+      "coeficiente_utilidad": 11.8
+    },
+    {
+      "id": "N13",
+      "coeficiente_utilidad": 8.3
+    },
+    {
+      "id": "N14",
+      "coeficiente_utilidad": 10.1
+    },
+    {
+      "id": "N15",
+      "coeficiente_utilidad": 9.5
+    }
+  ]
+}

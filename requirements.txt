@@ -1,0 +1,4 @@
+# Solución base (src/ejecutar_casos.py, pruebas): solo biblioteca estándar de Python >= 3.10
+# Validación experimental (experimentos.py):
+matplotlib>=3.5
+numpy>=1.21

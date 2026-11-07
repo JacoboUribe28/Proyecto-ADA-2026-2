@@ -1,0 +1,137 @@
+\section{Parte 2: algoritmo exacto y voraz de aproximación}\label{sec:seleccion}
+
+\subsection{Algoritmo exacto: árbol \emph{incluir / no incluir}}
+
+Como \SEL{} es NP-difícil, el exacto se usa solo como referencia para medir al voraz en casos
+pequeños (\texttt{seleccion\_exacta}).
+
+\begin{algorithm}[H]
+\caption{\textsc{SelecciónExacta}$(S_1,\dots,S_N,\ k)$ — \texttt{seleccion\_exacta}}\label{alg:exacto}
+\SetKwFunction{Explorar}{Explorar}
+\SetKwProg{Fn}{función}{:}{}
+\Fn{\Explorar{$i$, $A$}}{
+  \lIf(\tcp*[f]{caso 1: hoja}){$|A|=k$}{\Return{$\big(f(A),A\big)$}}
+  \lIf(\tcp*[f]{caso 2: poda}){$N-i<k-|A|$}{\Return{$(-\infty,\emptyset)$}}
+  $(v_1,A_1)\leftarrow$ \Explorar{$i+1$, $A\cup\{i\}$} \tcp*{caso 3a: incluir $i$}
+  $(v_2,A_2)\leftarrow$ \Explorar{$i+1$, $A$} \tcp*{caso 3b: no incluir $i$}
+  \Return{la mejor de las dos}\;
+}
+\Return{\Explorar{$0$, $\emptyset$}}\;
+\end{algorithm}
+
+\subsubsection*{Deducción 1: sin cupo, por recurrencia y sustitución}
+
+Si se recorren todos los subconjuntos, cada llamada con $n$ nodos por decidir hace dos llamadas con
+$n-1$ y trabajo constante $c$, y cada hoja evalúa $f$ desde cero con costo $\tau_f$:
+\begin{align*}
+T(n) &= 2T(n-1)+c,\qquad T(0)=\tau_f\\
+     &= 2\big(2T(n-2)+c\big)+c = 2^2T(n-2)+c\,(2+1)\\
+     &= 2^3T(n-3)+c\,(2^2+2+1)\\
+     &\ \ \vdots\\
+     &= 2^jT(n-j)+c\sum_{l=0}^{j-1}2^l = 2^jT(n-j)+c\,(2^j-1).
+\end{align*}
+Con $j=n$ se llega al caso base:
+\begin{clave}
+$T(N)=2^N\tau_f+c\,(2^N-1)=(\tau_f+c)\,2^N-c\ \in\ \Theta(2^N)$ si $\tau_f$ es constante; $\Theta(2^N\tau_f)$ en general.
+\end{clave}
+
+\subsubsection*{Deducción 2: con cupo $k$, recurrencia de Pascal}
+
+Sea $L(n,r)$ el número de hojas (evaluaciones de $f$) cuando quedan $n$ nodos por decidir y faltan
+$r$ por escoger. La rama \emph{incluir} gasta un lugar del cupo y la rama \emph{no incluir} no:
+\[
+  L(n,r)=L(n-1,r-1)+L(n-1,r),\qquad L(n,0)=1,\qquad L(n,r)=0\ \text{si } r>n .
+\]
+Es la regla de Pascal, $\binom{n}{r}=\binom{n-1}{r-1}+\binom{n-1}{r}$, con los mismos casos base; por
+inducción sobre $n$, $L(n,r)=\binom{n}{r}$. El algoritmo evalúa $f$ \textbf{exactamente}
+$\binom{N}{k}$ veces, y una prueba automática lo comprueba en 100 instancias. Como cada llamada interna lleva a una hoja y la profundidad es a lo sumo $N$:
+\[
+  T_{\text{exacto}}(N,k)\in\Omega\!\left(\tbinom{N}{k}\tau_f\right),\qquad
+  T_{\text{exacto}}(N,k)\in O\!\left(\tbinom{N}{k}(N+\tau_f)\right),
+\]
+y el mejor y el peor caso coinciden, porque el recorrido no depende de los datos.
+
+\begin{lema}
+$\binom{N}{\floor{N/2}}\ge \dfrac{2^N}{N+1}$.
+\end{lema}
+\begin{proof}
+Los $N+1$ números $\binom{N}{0},\dots,\binom{N}{N}$ suman $2^N$, y el mayor de ellos,
+$\binom{N}{\floor{N/2}}$, es al menos su promedio.
+\end{proof}
+
+\noindent Con $k\approx N/2$ el exacto hace $\Omega(2^N/N)$ evaluaciones: es exponencial. Con $k$
+fijo, $\binom{N}{k}\in\Theta(N^k)$, un polinomio cuyo grado crece con $k$; como $k$ es parte de la
+entrada, el algoritmo no es polinomial en general. Por eso el programa solo lo ejecuta si
+$\binom{N}{k}\le 500\,000$.
+
+\subsection{Algoritmo voraz}
+
+\begin{algorithm}[H]
+\caption{\textsc{SelecciónVoraz}$(S_1,\dots,S_N,\ k)$ — \texttt{seleccion\_voraz}}\label{alg:voraz}
+$A\leftarrow\emptyset$;\ $\mathit{cubierto}\leftarrow\emptyset$\;
+\For{$\mathit{paso}\leftarrow 1$ \KwTo $k$}{
+  \For{cada $j\notin A$}{
+    $\Delta_j\leftarrow|S_j\setminus\mathit{cubierto}|$ \tcp*{una evaluación de la ganancia}
+  }
+  $j^*\leftarrow$ el $j$ de mayor $\Delta_j$ (en empate, el de mayor $p_j$; luego, el de menor índice)\;
+  $A\leftarrow A\cup\{j^*\}$;\ $\mathit{cubierto}\leftarrow\mathit{cubierto}\cup S_{j^*}$\;
+}
+\Return{$A$}\;
+\end{algorithm}
+
+En el código, la ganancia es \texttt{(masks[j] \& \textasciitilde cubierto).bit\_count()}: las
+categorías de $j$ que aún no están cubiertas, contadas como bits.
+
+\paragraph{Desempate.} $p_j=u_j(1)-u_j(0)$ es la ganancia de la primera unidad de presupuesto del
+nodo $j$; con $u_j(x)=w_j\ln(1+x)$, $p_j=w_j\ln2$, así que gana el de mayor coeficiente. El
+desempate solo elige entre candidatos con el mismo $\Delta_j$ máximo, de modo que la sucesión de
+valores $f_1,f_2,\dots$ y la garantía de abajo no cambian; comparar $p_j$ cuesta $O(1)$, así que el
+conteo de evaluaciones tampoco cambia. Sí cambia \emph{qué} grupo se entrega cuando hay varios con
+la misma cobertura: en el caso de la profesora, 33 grupos distintos cubren las 20 categorías, y su
+utilidad tras el reparto va de 91.06 a 107.04. Desempatando por índice, el voraz entregaba uno de
+92.58; desempatando por $p_j$, entrega uno de 99.58 (Sección~\ref{sec:resultados}).
+
+\paragraph{Conteo de evaluaciones.} En el paso $i$ quedan $N-i+1$ candidatos:
+\[
+  T_{\text{voraz}}(N,k)=\sum_{i=1}^{k}(N-i+1)=kN-\frac{k(k-1)}{2}.
+\]
+Como $k\le N$, $k-1<N$ y $\frac{k(k-1)}{2}<\frac{kN}{2}$, así que $\frac{kN}{2}\le T_{\text{voraz}}\le kN$:
+\begin{clave}
+$T_{\text{voraz}}(N,k)\in\Theta(N k)$ evaluaciones y $\Theta(Nk\tau)$ de tiempo, con $\tau=O(|U|/w)$.
+El mejor y el peor caso coinciden.
+\end{clave}
+
+\begin{teorema}[Nemhauser, Wolsey y Fisher, 1978]
+Si $f$ es normalizada, monótona y submodular, el grupo $A_g$ del voraz cumple
+$f(A_g)\ge\left(1-\frac1e\right)f(A^*)\approx 0.632\,f(A^*)$.
+\end{teorema}
+\begin{proof}[Idea de la demostración]
+Sea $\mathrm{OPT}=f(A^*)$ y $f_i$ el valor tras $i$ pasos. Por monotonía,
+$\mathrm{OPT}\le f(A_i\cup A^*)$, con $A_i$ el grupo del voraz tras $i$ pasos. Por submodularidad, esa diferencia se reparte en a lo sumo $k$
+aportes de nodos de $A^*$, así que alguno aporta al menos $(\mathrm{OPT}-f_i)/k$, y el voraz toma
+uno al menos igual de bueno: $\mathrm{OPT}-f_{i+1}\le(1-\frac1k)(\mathrm{OPT}-f_i)$. Tras $k$ pasos,
+$\mathrm{OPT}-f_k\le(1-\frac1k)^k\mathrm{OPT}\le\mathrm{OPT}/e$, porque $1-y\le e^{-y}$.
+\end{proof}
+
+\paragraph{Aplicación.} Las hipótesis son las del Lema~\ref{lem:valida}. En cada caso pequeño el
+programa calcula $f(A_g)/f(A^*)$ y verifica que sea $\ge 1-1/e$; las pruebas lo comprueban en 300
+instancias aleatorias. La cota no se puede mejorar en tiempo polinomial salvo que P$=$NP
+(Feige, 1998), así que el voraz alcanza la mejor garantía posible.
+
+\paragraph{El voraz no siempre es óptimo.} Con $S_1=\{1,2,3,4\}$, $S_2=\{1,2,5\}$, $S_3=\{3,4,6\}$
+y $k=2$ (caso \texttt{casos/ejemplos/ej00\_tres\_nodos.json}), el voraz toma $S_1$ y luego $S_2$
+o $S_3$ (los dos aportan un elemento nuevo), con $f=5$, pero $\{S_2,S_3\}$ cubre 6. La razón $5/6\approx0.833$ cumple la garantía.
+
+\subsection{Resumen de funciones de eficiencia}
+
+\begin{center}
+\begin{tabularx}{\linewidth}{lXc}
+\cabecera \cab{Algoritmo} & \cab{Función de eficiencia} & \cab{¿Mejor $=$ peor?} \\
+Reparto voraz (P1) & peor $\Theta(N+B\log N)$; mejor $\Theta(N+B)$ & No \\
+Selección exacta con cupo (P2) & $\binom{N}{k}$ evaluaciones; $O\big(\binom{N}{k}(N+\tau_f)\big)$ & Sí \\
+Selección exacta sin cupo (P2) & $(\tau_f+c)2^N-c\in\Theta(2^N\tau_f)$ & Sí \\
+Selección voraz (P2) & $kN-\frac{k(k-1)}{2}=\Theta(Nk)$ evaluaciones; $\Theta(Nk\tau)$ tiempo & Sí \\
+Solución base completa & $\Theta(Nk\tau)+O(k+B\log k)$, más leer la entrada en $O(N+\sum_j|S_j|)$ & No \\
+\bottomrule
+\end{tabularx}
+\end{center}

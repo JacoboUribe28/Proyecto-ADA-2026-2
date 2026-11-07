@@ -1,0 +1,84 @@
+\section{Solución base}
+
+\subsection{Organización del repositorio}
+
+\begin{center}
+\begin{tabular}{>{\ttfamily}l>{\raggedright\arraybackslash}p{0.54\linewidth}}
+\cabecera \cab{Carpeta o archivo} & \cab{Contenido} \\
+VERSION & Versión única del proyecto; se estampa en cada salida \\
+src/ejecutar\_casos.py & Programa principal: ejecuta los casos de \texttt{casos/} \\
+src/red/ & Algoritmos, validación de entrada, verificación y reportes \\
+src/completar\_categorias.py & Opcional: escribe en un archivo las categorías sintéticas que el programa genera al leer \\
+casos/ & Caso de la profesora, sin modificar; \texttt{ejemplos/} guarda casos de práctica \\
+resultados/ & Una carpeta por caso y el resumen de la ejecución \\
+tests/ & Pruebas automáticas (solo biblioteca estándar) \\
+docs/ & Manual técnico y manual de usuario \\
+Informe/ & Este informe (\LaTeX{} y PDF), figuras y código de los experimentos \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Flujo de una ejecución}
+
+\begin{enumerate}[label=\textbf{\arabic*.}]
+  \item \textbf{Lectura y validación} (\texttt{io\_casos.py}). Acepta el formato de la profesora
+  (\texttt{parametros}, \texttt{coeficiente\_utilidad} y, si las hay, \texttt{categorias}) y un
+  formato extendido. Si los nodos no traen categorías, como en el archivo de la profesora, se
+  generan en memoria con semilla fija (36921, universo de 20, entre 3 y 7 por nodo); el archivo no
+  se modifica y la salida lo declara en \texttt{origen\_categorias}. Rechaza con un mensaje claro:
+  $k<1$ o $k>N$, $B<0$, ids repetidos, coeficientes no numéricos, categorías que no son una lista
+  de textos y campos faltantes. Un caso inválido no detiene a los demás.
+  \item \textbf{Medición} (\texttt{pipeline.py}): mediana de 5 ejecuciones de selección y reparto,
+  sin escribir trazas.
+  \item \textbf{Óptimos de referencia}: árbol exacto si $\binom{N}{k}\le 500\,000$ y programación
+  dinámica $O(kB^2)$ para el reparto si $kB^2\le3\cdot10^6$.
+  \item \textbf{Resolución con traza}. El algoritmo es determinista: decide igual que al medir.
+  \item \textbf{Verificación} (\texttt{verificacion.py}): 12 chequeos (tabla siguiente).
+  \item \textbf{Salidas} por caso, en la carpeta \texttt{resultados/<caso>/}: \texttt{salida.json}
+  (resultado, tiempo y verificación), \texttt{traza.json} y \texttt{traza.md} (selección con las
+  ganancias marginales de todos los candidatos, reparto unidad por unidad y restricciones), y la
+  misma traza en CSV. Además, \texttt{resultados/resumen.md}.
+\end{enumerate}
+
+\subsection{Verificación de restricciones}
+
+\begin{center}
+\begin{tabular}{r>{\raggedright}p{0.45\linewidth}>{\raggedright\arraybackslash}p{0.38\linewidth}}
+\cabecera \cab{\#} & \cab{Chequeo} & \cab{Qué garantiza} \\
+1 & $|A|=k$ & Cupo respetado \\
+2 & Nodos de $A$ válidos y distintos & Selección bien formada \\
+3 & $f(A)$ de la traza $=$ $f(A)$ recalculada & Cuenta incremental correcta \\
+4 & Ganancias de la selección no crecientes & Submodularidad observada \\
+5 & $f(A)\ge(1-1/e)\,f^*$ (si se calculó $f^*$) & Garantía de aproximación \\
+6 & $x_i$ entero $\ge0$ & Reparto factible \\
+7 & $x_i=0$ si $i\notin A$ & Solo reciben los elegidos \\
+8 & $\sum_i x_i\le B$ (y $x_i\le c_i$) & Presupuesto respetado \\
+9 & Utilidad recalculada coincide & Suma reportada correcta \\
+10 & Ganancias del reparto no crecientes & Concavidad observada \\
+11 & Ninguna transferencia de una unidad mejora & Optimalidad del reparto \\
+12 & No sobra presupuesto aprovechable & No se desperdician unidades útiles \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\noindent El chequeo 11 basta para la optimalidad: con utilidades cóncavas, si mover una unidad de
+un nodo a otro nunca mejora, el reparto es un óptimo global (es la condición del argumento de
+intercambio de la Sección~\ref{sec:reparto}).
+
+\subsection{Correspondencia con la guía de la primera entrega}\label{sec:evidencias}
+
+\begin{center}
+\begin{tabular}{>{\raggedright}p{0.42\linewidth}>{\raggedright\arraybackslash}p{0.5\linewidth}}
+\cabecera \cab{Requisito de la guía} & \cab{Dónde está} \\
+Formalización de las dos partes (entradas, salidas, tamaño, objetivo y restricciones) & Sección~\ref{sec:formalizacion} \\
+Prueba de NP-dureza por reducción desde Cobertura Máxima & Sección~\ref{sec:reduccion}; \texttt{desde\_cobertura\_maxima} en \texttt{src/red/seleccion.py} y su prueba automática \\
+Código de la solución base, dependencias, README e instrucciones & \texttt{src/}, \texttt{requirements.txt}, \texttt{pyproject.toml}, \texttt{README.md} \\
+Manual técnico (algoritmo, estructura, formatos, pasos de ejecución, limitaciones) & \texttt{docs/manual\_tecnico.md} \\
+Ejecutar la solución base con los casos de la profesora & \texttt{casos/entrada\_G2\_red\_15\_nodos.json}, sin modificar; \texttt{python src/ejecutar\_casos.py} \\
+Resultados y tiempo por caso & \texttt{resultados/resumen.md} y \texttt{resultados/<caso>/salida.json} \\
+Traza: selección, ganancias marginales, reparto y restricciones & \texttt{resultados/<caso>/traza.md} (partes A, B y C), \texttt{traza.json} y CSV \\
+Reproducibilidad sin editar la lógica & El caso se agrega copiando el \texttt{.json} a \texttt{casos/}; semillas fijas \\
+Misma versión en informe, repositorio, manual y evidencias & Archivo \texttt{VERSION}, estampado en cada salida; prueba automática \\
+\bottomrule
+\end{tabular}
+\end{center}

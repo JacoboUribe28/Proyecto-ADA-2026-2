@@ -1,0 +1,78 @@
+\section{Resultados}\label{sec:resultados}
+
+\subsection{Caso de la profesora}
+
+Caso \texttt{casos/entrada\_G2\_red\_15\_nodos.json}, tal como se recibió: $N=15$, $k=5$, $B=30$ y
+$u_i(x)=w_i\ln(1+x)$, con $w_i$ el coeficiente de cada nodo dado por la profesora. La entrada trae
+solo los coeficientes, así que las categorías de datos son \textbf{sintéticas}: el programa las
+genera al leer el caso con semilla 36921, universo de 20 categorías y entre 3 y 7 por nodo, sin
+modificar el archivo. La salida lo declara en \texttt{origen\_categorias}, y
+\texttt{src/completar\_categorias.py} escribe esas mismas categorías en un archivo si se quieren ver.
+
+\begin{center}
+\begin{tabular}{>{\raggedright}p{0.36\linewidth}>{\raggedright\arraybackslash}p{0.52\linewidth}}
+\cabecera \cab{Resultado} & \cab{Valor} \\
+Nodos elegidos (en orden) & N04, N15, N14, N13, N06 \\
+Ganancias marginales $\Delta$ de la selección & 7, 6, 4, 2, 1 \\
+Categorías cubiertas $f(A)$ & 20 de 20 \\
+Óptimo exacto & 20, con $\binom{15}{5}=3003$ evaluaciones; razón 1.0000 \\
+Reparto de $B=30$ & N04 $=7$, N15 $=5$, N14 $=6$, N13 $=5$, N06 $=7$ \\
+Utilidad total & 99.5821, igual al óptimo por programación dinámica para esos cinco nodos \\
+Tiempo (selección $+$ reparto) & 0.018 ms (mediana de 5; depende del equipo) \\
+Verificación & 12 de 12 chequeos \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Traza de la selección} (\texttt{resultados/entrada\_G2\_red\_15\_nodos/traza.md}):
+
+\begin{center}
+\begin{tabular}{ccc>{\raggedright}p{0.42\linewidth}c}
+\cabecera \cab{Paso} & \cab{Elegido} & \cab{$\Delta$} & \cab{Categorías nuevas} & \cab{$f(A)$} \\
+1 & N04 & 7 & K01, K02, K06, K09, K12, K13, K14 & 7 \\
+2 & N15 & 6 & K03, K08, K10, K16, K17, K19 & 13 \\
+3 & N14 & 4 & K04, K07, K11, K15 & 17 \\
+4 & N13 & 2 & K05, K20 & 19 \\
+5 & N06 & 1 & K18 & 20 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Los empates se resuelven por el coeficiente: en el paso 1 empatan con 7 N04, N06, N13, N14 y N15,
+y gana N04 ($w=12.0$); en el paso 2 empatan N13 y N15 con 6, y gana N15 ($w=9.5$ frente a 8.3); en
+el paso 5 empatan N05, N06 y N11 con 1, y gana N06 ($w=11.1$). Las ganancias nunca suben, como
+predice la submodularidad.
+
+\paragraph{Efecto del desempate.} 33 grupos de cinco nodos cubren las 20 categorías; tras el
+reparto, su utilidad va de 91.06 a 107.04. La versión 1.0.0, que desempataba por posición en el
+archivo, entregaba N04, N13, N14, N03 y N05 con utilidad 92.58; desempatando por coeficiente, la
+cobertura es la misma y la utilidad sube a 99.58. La mejor de las 33 (107.04) no se alcanza porque
+selección y reparto se resuelven en secuencia (Sección~\ref{sec:formalizacion}).
+
+\paragraph{Traza del reparto.} La primera unidad va a N04 ($12.0\ln2=8.3178$), la segunda a N06
+($11.1\ln2=7.6939$), luego N14 (7.0008), N15 (6.5849) y N13 (5.7531). La sexta vuelve a N04
+($12.0(\ln3-\ln2)=4.8656$). Las 30 ganancias marginales aparecen en orden no creciente en
+\texttt{traza.md} y \texttt{traza\_reparto.csv}.
+
+\subsection{Casos sintéticos de ejemplo}
+
+Casos de \texttt{casos/ejemplos/}, generados con semilla fija (\texttt{src/generar\_casos\_ejemplo.py}):
+
+\begin{center}
+\begin{tabular}{lrrrrlrr}
+\cabecera \cab{Caso} & \cab{$N$} & \cab{$k$} & \cab{$B$} & \cab{$f$} & \cab{Razón vs. óptimo} & \cab{Utilidad} & \cab{ms} \\
+ej00\_tres\_nodos & 3 & 2 & 6 & 5 & 0.8333 (5/6) & 14.0511 & 0.006 \\
+ej01\_pequeno & 8 & 3 & 20 & 11 & 1.0000 & 55.3778 & 0.009 \\
+ej02\_pequeno\_caps & 10 & 4 & 25 & 18 & 0.9474 (18/19) & 34.1613 & 0.012 \\
+ej03\_mediano & 14 & 5 & 40 & 39 & 1.0000 & 80.4221 & 0.024 \\
+ej04\_grande & 500 & 20 & 2000 & 400 & no se calcula & 1221.8066 & 1.750 \\
+ej05\_grande\_caps & 2000 & 40 & 10000 & 800 & no se calcula & 955.9874 & 11.686 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Todos cumplen los 12 chequeos. En ej04 y ej05 el voraz cubre todo el universo (400 y 800
+categorías), así que ahí también es óptimo. En los casos con óptimo calculado, la menor razón es
+0.8333, muy por encima de la garantía de 0.632. Con el desempate por la ganancia de la primera unidad, la cobertura
+es la misma que con la versión 1.0.0 en todos los ejemplos y la utilidad no baja en ninguno (sube,
+por ejemplo, de 1054.64 a 1221.81 en ej04).

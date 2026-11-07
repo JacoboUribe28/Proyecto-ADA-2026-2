@@ -1,0 +1,24 @@
+[project]
+name = "proyecto-ada-2026-2"
+version = "1.1.0"                      # igual al archivo VERSION
+description = "Proyecto ADA 2026-2 (Red): selección de participantes y reparto del presupuesto de ruido"
+authors = [{ name = "Jacobo Uribe Montoya (código 36921)" }]
+requires-python = ">=3.10"
+dependencies = []                      # la solución solo usa la biblioteca estándar
+
+[project.optional-dependencies]
+experimentos = ["matplotlib>=3.5", "numpy>=1.21"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+
+[tool.mypy]
+python_version = "3.10"
+ignore_missing_imports = true

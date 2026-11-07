@@ -1,0 +1,2 @@
+caso,N,k,B,f_voraz,f_optimo,razon_vs_optimo,utilidad_total,t_seleccion_s,t_reparto_s,t_total_s,restricciones_ok
+entrada_G2_red_15_nodos,15,5,30,20,20,1.0000,99.582111,0.000008,0.000010,0.000018,True
